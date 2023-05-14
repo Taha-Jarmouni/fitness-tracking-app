@@ -339,10 +339,10 @@ class App {
     }
 
 }
+console.log('');
 
 const app = new App();
 console.log(app);
-console.log('');
 
 
 // window.localStorage.clear();
