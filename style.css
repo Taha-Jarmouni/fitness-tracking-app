@@ -1,6 +1,6 @@
 :root {
   --color-brand--1: #ffb545;
-  --color-brand--2: #00c46a;
+  --color-brand--2: #ff5526;
 
   --color-dark--1: #2d3439;
   --color-dark--2: #42484d;
@@ -27,10 +27,8 @@ body {
   line-height: 1.6;
   height: 100vh;
   overscroll-behavior-y: none;
-
   background-color: #fff;
-  padding: 2.5rem;
-
+  /* padding: 2.5rem; */
   display: flex;
 }
 
@@ -47,6 +45,7 @@ a:visited {
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .logo {
@@ -76,9 +75,10 @@ a:visited {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.75rem 1.5rem;
+  position: relative;
 }
 .workout--running {
-  border-left: 5px solid var(--color-brand--2);
+  border-left: 5px solid #00ee00;
 }
 .workout--cycling {
   border-left: 5px solid var(--color-brand--1);
@@ -189,6 +189,61 @@ a:visited {
   color: var(--color-light--2);
 }
 
+.delete {
+  background-color: red;
+  font-size: 15px;
+  color: white;
+  z-index: 11;
+  padding: 5px;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 7px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.edit {
+  background-color: orange;
+  font-size: 15px;
+  color: white;
+  z-index: 11;
+  padding: 5px;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 7px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.delete:hover {
+  background-color: #d30000;
+}
+
+.edit:hover {
+  background-color: #d48a00;
+}
+
+.buttonDelete {
+  padding: 20px;
+  font-size: 20px;
+  margin: 10px;
+  width: 100%;
+  font-weight: bolder;
+  background: var(--color-brand--2);
+  border: 3px solid rgb(214, 222, 224);
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+
+}
+.buttonDelete:hover {
+  background-color: #df3c0e;
+}
+
 /* MAP */
 #map {
   flex: 1;
@@ -213,7 +268,7 @@ a:visited {
 }
 
 .running-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid var(--color-brand--2);
+  border-left: 5px solid #00ee00;
 }
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
