@@ -152,7 +152,7 @@ class App {
   }
   
   _showForm(mapE) {
-    console.log(mapE);
+    // console.log(mapE);
     this.#mapEvent = mapE;
     
     form.classList.remove('hidden');
@@ -181,11 +181,14 @@ class App {
   
     const workout = this._workouts.find(w => w.id === workoutId);
     
-    console.log(workout);
+    // console.log(workout);
 
-    this.coordsid = workout.coords;
+    try {
+      this.coordsid = workout.coords;
+    }catch(err){
+    }
   
-    console.log(this.coordsid);
+    // console.log(this.coordsid);
     // Populate form etc...
   
   }
@@ -208,7 +211,7 @@ class App {
     if(!this.#mapEvent) this.#mapEvent = { latlng : { lat: this.coordsid[0] , lng:  this.coordsid[1] } };
     const { lat, lng } = this.#mapEvent.latlng;
 
-    console.log(this.#mapEvent.latlng);
+    // console.log(this.#mapEvent.latlng);
     let workout;
     
     // If workout running, create running object
