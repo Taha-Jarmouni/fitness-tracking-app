@@ -1,5 +1,4 @@
 'use strict';
-
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
@@ -77,12 +76,14 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 const deleteAll = document.querySelector('.deleteAll');
 
+
 class App {
   #map;
   #mapZoomLevel = 13;
   #mapEvent;
-  #workouts = [];
+  _workouts = [];
   marking = "";
+  coordsid
   constructor() {
     // Get user's position
 
@@ -96,9 +97,15 @@ class App {
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
 
+
     // Add adit and delete events to element 
-    this.#workouts.forEach(work => {
+    this._workouts.forEach(work => {
       this._addEventListenerToDelete(work);
+      this._AddeventListenerToEdit(work);
+    });
+
+    this._workouts.forEach(work => {
+      //...
       this._AddeventListenerToEdit(work);
     });
 
@@ -113,7 +120,6 @@ class App {
       }
     });
   }
-
   _getPosition() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
@@ -140,13 +146,15 @@ class App {
     // Handling Clicks on map
     this.#map.on('click', this._showForm.bind(this));
 
-    this.#workouts.forEach(work => {
+    this._workouts.forEach(work => {
       this._renderWorkoutMarker(work);
     });
   }
-
+  
   _showForm(mapE) {
+    console.log(mapE);
     this.#mapEvent = mapE;
+    
     form.classList.remove('hidden');
     inputDistance.focus();
   }
@@ -164,6 +172,24 @@ class App {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
+  
+  _handleEditClick(e) {
+
+    const workoutEl = e.target.closest('.workout');
+    
+    const workoutId = workoutEl.dataset.id;
+  
+    const workout = this._workouts.find(w => w.id === workoutId);
+    
+    console.log(workout);
+
+    this.coordsid = workout.coords;
+  
+    console.log(this.coordsid);
+    // Populate form etc...
+  
+  }
+
   _newWorkout(e) {
     const validInputs = (...inputs) =>
     inputs.every(inp => Number.isFinite(inp));
@@ -175,7 +201,14 @@ class App {
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
+
+    // this._workouts
+    // console.log(this._workouts[0].coords[0]);
+ 
+    if(!this.#mapEvent) this.#mapEvent = { latlng : { lat: this.coordsid[0] , lng:  this.coordsid[1] } };
     const { lat, lng } = this.#mapEvent.latlng;
+
+    console.log(this.#mapEvent.latlng);
     let workout;
     
     // If workout running, create running object
@@ -208,8 +241,9 @@ class App {
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
 
+
     // Add new object to workout array
-    this.#workouts.push(workout);
+    this._workouts.push(workout);
 
     // Render workout on map as marker
     this._renderWorkoutMarker(workout);
@@ -228,9 +262,15 @@ class App {
 
     // Set local storage to all workouts
     this._setLocalStorage();
+
   }
   
   _AddeventListenerToEdit(work) {
+    
+    document.querySelectorAll('.edit').forEach(btn => {
+      btn.addEventListener('click', this._handleEditClick.bind(this)); 
+    });
+
     document.querySelectorAll('.workout').forEach((wrk, i) => {
       if (wrk.dataset.id == work.id) {
         let event = '';
@@ -293,7 +333,7 @@ class App {
 
           app.#map.removeLayer(work.marking);
 
-          app.#workouts = app.#workouts.filter(data => data.id != work.id);
+          app._workouts = app._workouts.filter(data => data.id != work.id);
 
           app._setLocalStorage();
         });
@@ -306,11 +346,12 @@ class App {
       if (w.dataset.id == work.id) {
         w.remove();
          app.#map.removeLayer(work.marking);
-        app.#workouts = app.#workouts.filter(data => data.id != w.dataset.id);
+        app._workouts = app._workouts.filter(data => data.id != w.dataset.id);
         app._setLocalStorage();
       }
     });
   }
+
   _renderWorkoutMarker(workout) {
     // Display Marker
     const marker =  L.marker(workout.coords)
@@ -396,7 +437,7 @@ class App {
 
     if (!workoutEl) return;
 
-    const workout = this.#workouts.find(
+    const workout = this._workouts.find(
       work => work.id === workoutEl.dataset.id
     );
     if (workout != null) {
@@ -423,7 +464,7 @@ class App {
   };
 
   _setLocalStorage() {
-    localStorage.setItem('workouts', JSON.stringify(this.#workouts, this._getCircularReplacer()));  
+    localStorage.setItem('workouts', JSON.stringify(this._workouts, this._getCircularReplacer()));  
   }
 
   _getLocalStorage() {
@@ -431,9 +472,9 @@ class App {
 
     if (!data) return;
 
-    this.#workouts = data;
+    this._workouts = data;
 
-    this.#workouts.forEach(work => {
+    this._workouts.forEach(work => {
       this._renderWorkout(work);
     });
   }
@@ -441,4 +482,7 @@ class App {
 }
 
 const app = new App();
+
+/* Modified by Taha Jarmouni */
+
 
